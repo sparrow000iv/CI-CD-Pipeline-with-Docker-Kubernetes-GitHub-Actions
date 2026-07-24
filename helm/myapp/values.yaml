@@ -1,0 +1,40 @@
+# Default values for myapp Helm chart
+replicaCount: 2
+
+image:
+  repository: ghcr.io/sparrow000iv
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+services:
+  userService:
+    port: 5001
+  productService:
+    port: 5002
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: api.example.com
+      paths:
+        - path: /users
+          service: user-service
+        - path: /products
+          service: product-service
+
+environment: dev
